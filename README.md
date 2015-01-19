@@ -26,4 +26,6 @@ $ sudo docker run -p 80 -v /tmp/www:/data combro2k/docker-nginx-php5
 - /data/config: contains extra configuration files:
     - nginx-*.conf loaded by nginx daemon
     - php-*.conf loaded by PHP-fpm daemon
-    - emstprc loaded by esmtp sendmail relay for using sendmail in php mail() command (http://esmtp.sourceforge.net/manual.html)
+    - emstprc loaded by [esmtp][esmtp] sendmail relay for using sendmail in php mail() command
+
+[esmtp]: http://esmtp.sourceforge.net/manual.html
