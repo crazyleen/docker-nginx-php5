@@ -1,4 +1,4 @@
-FROM combo2k/debian-debootstrap:8
+FROM combro2k/debian-debootstrap:8
 MAINTAINER Martijn van Maurik <docker@vmaurik.nl>
 
 ENV DEBIAN_FRONTEND noninteractive
