@@ -8,7 +8,6 @@ ENV HOME /root
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
 RUN echo deb http://nginx.org/packages/mainline/ubuntu trusty nginx > /etc/apt/sources.list.d/nginx-stable-trusty.list
 RUN apt-get update
-RUN apt-get -y upgrade
 
 # Install
 RUN apt-get install -yq nginx php5-fpm php5-mysql php5-apcu php5-imagick php5-imap php5-mcrypt php5-gd libssh2-php php5-memcache php5-memcached php5-curl esmtp esmtp-run
