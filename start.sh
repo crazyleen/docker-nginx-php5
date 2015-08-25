@@ -9,6 +9,7 @@ DATADIR="/data"
 [[ -f "/data/config/esmtprc" ]] || cp /etc/esmtprc /data/config/esmtprc
 [[ ! -L "/etc/esmtprc" ]] && rm /etc/esmtprc && ln -s /data/config/esmtprc /etc/esmtprc
 [[ -d "/data/web" ]] || mkdir /data/web
+[[ -d "/data/logs" ]] || mkdir /data/logs
 
 chown www-data: /data -R
 
