@@ -10,7 +10,9 @@ RUN echo deb http://nginx.org/packages/mainline/ubuntu trusty nginx > /etc/apt/s
 RUN apt-get update
 
 # Install
-RUN apt-get install -yq nginx php5-fpm php5-mysql php5-apcu php5-imagick php5-imap php5-mcrypt php5-gd libssh2-php php5-memcache php5-memcached php5-curl esmtp esmtp-run
+RUN apt-get install -yq nginx php5-fpm php5-mysql php5-apcu php5-imagick php5-imap php5-mcrypt php5-gd libssh2-php php5-memcache php5-memcached php5-curl esmtp esmtp-run && \
+    apt-get clean
+	   rm -fr /var/lib/apt 
 
 RUN mkdir -p /etc/nginx/sites-enabled /etc/nginx/sites-available
 
@@ -25,7 +27,6 @@ RUN mkdir -p /data/web /data/config
 
 # Decouple our data from our container.
 VOLUME ["/data"]
-VOLUME ["/var/log/nginx"]
 
 EXPOSE 80
 ADD start.sh /start.sh
