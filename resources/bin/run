@@ -25,14 +25,14 @@ fi
 [[ ! -L "/etc/esmtprc" ]] && rm /etc/esmtprc && ln -s "${DATADIR}/config/esmtprc" /etc/esmtprc
 
 # Check if the project is an symfony2/silex based project
-if [[ -d "${DATADIR}/app" ]] && [[ -f "${DATADIR}/app/composer.json" ]] && [[ ! -d "${DATADIR}/app/vendor" ]]
+if [[ -d "${DATADIR}/app" ]] && [[ -f "${DATADIR}/app/composer.json" ]]
 then
     if [[ ! -f "${DATADIR}/bin/composer" ]]
     then
         curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=bin > /dev/null
     fi
 
-    pushd "${DATADIR}/app" > /dev/null && ${DATADIR}/bin/composer install --no-dev && popd > /dev/null
+    ${DATADIR}/bin/composer install --working-dir "${DATADIR}/app" --no-interaction --optimize-autoloader
 fi
 
 popd > /dev/null
