@@ -1,18 +1,43 @@
 #!/bin/bash -e
+
 DATADIR="/data"
 
-[[ -d "/data/" ]] || mkdir /data
-[[ -d "/data/config" ]] || mkdir /data/config
-[[ -e "/data/config/nginx-default.conf" ]] || cp /etc/nginx/sites-available/default /data/config/nginx-default.conf
-[[ ! -e "/data/config/php-user.ini" ]] && touch /data/config/php-user.ini
-([[ -e "/data/config/php-user.ini" ]] && [[ ! -e "/etc/php5/fpm/conf.d/999-user.ini" ]]) && ln -s /data/config/php-user.ini /etc/php5/fpm/conf.d/999-user.ini
-[[ -f "/data/config/esmtprc" ]] || cp /etc/esmtprc /data/config/esmtprc
-[[ ! -L "/etc/esmtprc" ]] && rm /etc/esmtprc && ln -s /data/config/esmtprc /etc/esmtprc
-[[ -d "/data/web" ]] || mkdir /data/web
-[[ -d "/data/logs" ]] || mkdir /data/logs
+[[ ! -d "${DATADIR}" ]] && mkdir -p "${DATADIR}"
+[[ ! -d "${DATADIR}/config" ]] && mkdir "${DATADIR}/config"
+[[ ! -d "${DATADIR}/logs" ]] && mkdir "${DATADIR}/logs"
+[[ ! -d "${DATADIR}/web" ]] && mkdir "${DATADIR}/web"
+[[ ! -d "${DATADIR}/bin" ]] && mkdir -p "${DATADIR}/bin"
 
-chown www-data: /data -R
+pushd "${DATADIR}" > /dev/null
 
-service php5-fpm start
-chmod 666 /var/run/php5-fpm.sock
-/usr/sbin/nginx
+# Create php-user.ini if not available and link it in the conf.d directory of fpm
+[[ ! -e "${DATADIR}/config/php-user.ini" ]] && touch ${DATADIR}/config/php-user.ini
+if [[ -e "${DATADIR}/config/php-user.ini" ]] && [[ ! -e "/etc/php5/fpm/conf.d/999-user.ini" ]]
+then
+    ln -s ${DATADIR}/config/php-user.ini /etc/php5/fpm/conf.d/999-user.ini
+fi
+
+# Create nginx-default.conf if not available
+[[ ! -e "${DATADIR}/config/nginx-default.conf" ]] && cp /etc/nginx/sites-available/default "${DATADIR}/config/nginx-default.conf"
+
+# Create esmtprc file for autoforwarding mail to the docker host and/or gmail host
+[[ ! -f "${DATADIR}/config/esmtprc" ]] && cp /etc/esmtprc "${DATADIR}/config/esmtprc"
+[[ ! -L "/etc/esmtprc" ]] && rm /etc/esmtprc && ln -s "${DATADIR}/config/esmtprc" /etc/esmtprc
+
+# Check if the project is an symfony2/silex based project
+if [[ -d "${DATADIR}/app" ]] && [[ -f "${DATADIR}/app/composer.json" ]] && [[ ! -d "${DATADIR}/app/vendor" ]]
+then
+    if [[ ! -f "${DATADIR}/bin/composer" ]]
+    then
+        curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=bin > /dev/null
+    fi
+
+    pushd "${DATADIR}/app" > /dev/null && ${DATADIR}/bin/composer install --no-dev && popd > /dev/null
+fi
+
+popd > /dev/null
+
+# Be sure the owner is www-data
+chown www-data:www-data "${DATADIR}" -R
+
+service php5-fpm start && chmod 666 /var/run/php5-fpm.sock && /usr/sbin/nginx
