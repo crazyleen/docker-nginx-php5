@@ -1,43 +1,39 @@
 #!/bin/bash -e
 
-DATADIR="/data"
+DATA_DIR="/data"
 
-[[ ! -d "${DATADIR}" ]] && mkdir -p "${DATADIR}"
-[[ ! -d "${DATADIR}/config" ]] && mkdir "${DATADIR}/config"
-[[ ! -d "${DATADIR}/logs" ]] && mkdir "${DATADIR}/logs"
-[[ ! -d "${DATADIR}/web" ]] && mkdir "${DATADIR}/web"
-[[ ! -d "${DATADIR}/bin" ]] && mkdir -p "${DATADIR}/bin"
+[[ ! -d "${DATA_DIR}" ]] && mkdir -p "${DATA_DIR}"
 
-pushd "${DATADIR}" > /dev/null
+pushd "${DATA_DIR}" > /dev/null
 
-# Create php-user.ini if not available and link it in the conf.d directory of fpm
-[[ ! -e "${DATADIR}/config/php-user.ini" ]] && touch ${DATADIR}/config/php-user.ini
-if [[ -e "${DATADIR}/config/php-user.ini" ]] && [[ ! -e "/etc/php5/fpm/conf.d/999-user.ini" ]]
-then
-    ln -s ${DATADIR}/config/php-user.ini /etc/php5/fpm/conf.d/999-user.ini
-fi
+[ ! -d "${DATA_DIR}/config" ] && mkdir "${DATA_DIR}/config"
+[ ! -d "${DATA_DIR}/logs" ] && mkdir "${DATA_DIR}/logs"
+[ ! -d "${DATA_DIR}/web" ] && mkdir "${DATA_DIR}/web"
+[ ! -d "${DATA_DIR}/bin" ] && mkdir -p "${DATA_DIR}/bin"
+[ ! -f "${DATA_DIR}/bin/composer" ] && curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=bin > /dev/null
+[ ! -e "${DATA_DIR}/config/php-user.ini" ] && touch ${DATA_DIR}/config/php-user.ini
+[ -e "${DATA_DIR}/config/php-user.ini" -a ! -e "/etc/php5/fpm/conf.d/999-user.ini" ] && ln -s ${DATA_DIR}/config/php-user.ini /etc/php5/fpm/conf.d/999-user.ini
+[ ! -e "${DATA_DIR}/config/nginx-default.conf" ] && cp /etc/nginx/sites-available/template "${DATA_DIR}/config/nginx-default.conf"
+[ ! -f "${DATA_DIR}/config/esmtprc" ] && cp /etc/esmtprc "${DATA_DIR}/config/esmtprc"
+[ ! -L "/etc/esmtprc" ] && rm /etc/esmtprc && ln -s "${DATA_DIR}/config/esmtprc" /etc/esmtprc
 
-# Create nginx-default.conf if not available
-[[ ! -e "${DATADIR}/config/nginx-default.conf" ]] && cp /etc/nginx/sites-available/default "${DATADIR}/config/nginx-default.conf"
-
-# Create esmtprc file for autoforwarding mail to the docker host and/or gmail host
-[[ ! -f "${DATADIR}/config/esmtprc" ]] && cp /etc/esmtprc "${DATADIR}/config/esmtprc"
-[[ ! -L "/etc/esmtprc" ]] && rm /etc/esmtprc && ln -s "${DATADIR}/config/esmtprc" /etc/esmtprc
-
-# Check if the project is an symfony2/silex based project
-if [[ -d "${DATADIR}/app" ]] && [[ -f "${DATADIR}/app/composer.json" ]]
-then
-    if [[ ! -f "${DATADIR}/bin/composer" ]]
-    then
-        curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=bin > /dev/null
+# Check if web is an symlink
+if [ -L "${DATA_DIR}/web" ]; then
+    LINK=$(readlink -e ${DATA_DIR}/web/)
+    if [ "$(dirname ${LINK})" == "${DATA_DIR}" ]; then
+         BASE_DIR=${LINK}
+    else
+        BASE_DIR=$(dirname ${LINK})
     fi
 
-    ${DATADIR}/bin/composer install --working-dir "${DATADIR}/app" --no-interaction --optimize-autoloader
+    if [ -f "${BASE_DIR}/composer.json" ]; then
+        ${DATA_DIR}/bin/composer install --working-dir "${BASE_DIR}" --no-interaction --optimize-autoloader
+    fi
 fi
 
-popd > /dev/null
-
 # Be sure the owner is www-data
-chown www-data:www-data "${DATADIR}" -R
+chown www-data:www-data "${DATA_DIR}" -R
 
-service php5-fpm start && chmod 666 /var/run/php5-fpm.sock && /usr/sbin/nginx
+service php5-fpm status > /dev/null 2>&1 || service php5-fpm start
+
+exec /usr/sbin/nginx
