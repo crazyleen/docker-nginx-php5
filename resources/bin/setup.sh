@@ -22,7 +22,7 @@ export PACKAGES=(
 
 pre_install(){
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62 
-    echo deb http://nginx.org/packages/mainline/ubuntu trusty nginx > /etc/apt/sources.list.d/nginx-stable-trusty.list 
+    echo deb http://nginx.org/packages/mainline/debian jessie nginx > /etc/apt/sources.list.d/nginx-stable-jessie.list
     
     apt-get update -q 2>&1
     apt-get install -yq ${PACKAGES[@]} 2>&1
