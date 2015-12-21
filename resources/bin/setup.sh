@@ -16,6 +16,7 @@ export PACKAGES=(
 	'php5-memcache'
 	'php5-memcached'
 	'php5-curl'
+	'php5-sqlite'
 	'esmtp'
 	'esmtp-run'
 )
