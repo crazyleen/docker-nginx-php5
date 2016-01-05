@@ -27,6 +27,10 @@ if [ -L "${DATA_DIR}/web" ]; then
     fi
 
     if [ -f "${BASE_DIR}/composer.json" ]; then
+        if [ -f "${BASE_DIR}/app/console" ]; then
+            export SYMFONY_ENV="prod"
+        fi
+
         ${DATA_DIR}/bin/composer install --working-dir "${BASE_DIR}" --no-interaction --optimize-autoloader
     fi
 fi
