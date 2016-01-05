@@ -10,6 +10,7 @@ export PACKAGES=(
 	'php5-apcu'
 	'php5-imagick'
 	'php5-imap'
+	'php5-intl'
 	'php5-mcrypt'
 	'php5-gd'
 	'libssh2-php'
