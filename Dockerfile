@@ -10,6 +10,7 @@ ENV HOME=/data \
 ADD resources/bin /usr/local/bin/
 RUN mkdir -p /opt/openresty
 ADD resources/openstar /opt/openresty
+ADD resources/openstar/conf /usr/local/openresty/nginx/conf
 
 # Run builder
 RUN chmod +x /usr/local/bin/* && touch ${INSTALL_LOG} && /bin/bash -l -c '/usr/local/bin/setup.sh build'

@@ -32,4 +32,4 @@ chown www-data:www-data "${DATA_DIR}" -R
 
 service php5-fpm status > /dev/null 2>&1 || service php5-fpm start
 
-exec /usr/bin/openresty
+exec /usr/bin/openresty -g 'deamon off;'
