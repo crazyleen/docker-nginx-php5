@@ -12,7 +12,6 @@ pushd "${DATA_DIR}" > /dev/null
 [ ! -d "${DATA_DIR}/bin" ] && mkdir -p "${DATA_DIR}/bin"
 [ ! -e "${DATA_DIR}/config/php-user.ini" ] && touch ${DATA_DIR}/config/php-user.ini
 [ -e "${DATA_DIR}/config/php-user.ini" -a ! -e "/etc/php5/fpm/conf.d/999-user.ini" ] && ln -s ${DATA_DIR}/config/php-user.ini /etc/php5/fpm/conf.d/999-user.ini
-[ ! -e "${DATA_DIR}/config/nginx-default.conf" ] && cp /etc/nginx/sites-available/template "${DATA_DIR}/config/nginx-default.conf"
 [ ! -f "${DATA_DIR}/config/esmtprc" ] && cp /etc/esmtprc "${DATA_DIR}/config/esmtprc"
 [ ! -L "/etc/esmtprc" ] && rm /etc/esmtprc && ln -s "${DATA_DIR}/config/esmtprc" /etc/esmtprc
 
@@ -31,4 +30,4 @@ chown www-data:www-data "${DATA_DIR}" -R
 
 service php5-fpm status > /dev/null 2>&1 || service php5-fpm start
 
-exec /usr/bin/openresty -g 'deamon off;'
+exec /usr/bin/openresty -c /ect/nginx/nginx.conf -g 'deamon off;'
