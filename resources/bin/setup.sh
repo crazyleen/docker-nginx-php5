@@ -2,11 +2,10 @@
 
 export DEBIAN_FRONTEND=noninteractive 
 export PACKAGES=(
-	'git'
-	'curl'
-	'nginx'
 	'php5-fpm'
 	'php5-mysql'
+  'php5-redis'
+  'php5-mongo'
 	'php5-apcu'
 	'php5-imagick'
 	'php5-imap'
@@ -17,21 +16,20 @@ export PACKAGES=(
 	'php5-memcache'
 	'php5-memcached'
 	'php5-curl'
-	'php5-sqlite'
 	'esmtp'
 	'esmtp-run'
 )
 
 pre_install(){
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62 
-    echo deb http://nginx.org/packages/mainline/debian jessie nginx > /etc/apt/sources.list.d/nginx-stable-jessie.list
-    
+  echo 'deb http://mirrors.aliyun.com/debian/ jessie main non-free contrib' > /etc/apt/sources.list
+  echo 'deb http://mirrors.aliyun.com/debian/ jessie-proposed-updates main non-free contrib' >> /etc/apt/sources.list
+  echo 'deb-src http://mirrors.aliyun.com/debian/ jessie main non-free contrib' >> /etc/apt/sources.list
+  echo 'deb-src http://mirrors.aliyun.com/debian/ jessie-proposed-updates main non-free contrib' >> /etc/apt/sources.list
+
     apt-get update -q 2>&1
     apt-get install -yq ${PACKAGES[@]} 2>&1
 
     sources=(
-        '/etc/nginx/sites-enabled'
-        '/etc/nginx/sites-available'
         '/data/bin'
         '/data/web'
         '/data/config'
@@ -48,8 +46,10 @@ configure_php5_fpm()
     echo "include = /data/config/php-*.conf" >> /etc/php5/fpm/pool.d/www.conf
 }
 
-install_composer() {
-    curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/data/bin 2>&1
+configure_nginx_openstar()
+{
+    rm -f /usr/local/openresty/nginx/conf/*
+    cp /opt/openresty/openstar/conf/* /usr/local/openresty/nginx/conf/
 }
 
 post_install() {
@@ -67,7 +67,7 @@ build() {
 	tasks=(
 		'pre_install'
 		'configure_php5_fpm'
-		'install_composer'
+    'configure_nginx_openstar'
 	)
 
 	for task in ${tasks[@]}

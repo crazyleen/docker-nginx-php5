@@ -25,14 +25,6 @@ if [ -L "${DATA_DIR}/web" ]; then
     else
         BASE_DIR=$(dirname ${LINK})
     fi
-
-    if [ -f "${BASE_DIR}/composer.json" ]; then
-        if [ -f "${BASE_DIR}/app/console" ]; then
-            export SYMFONY_ENV="prod"
-        fi
-
-        ${DATA_DIR}/bin/composer install --working-dir "${BASE_DIR}" --no-interaction --optimize-autoloader
-    fi
 fi
 
 # Be sure the owner is www-data
@@ -40,4 +32,4 @@ chown www-data:www-data "${DATA_DIR}" -R
 
 service php5-fpm status > /dev/null 2>&1 || service php5-fpm start
 
-exec /usr/sbin/nginx
+exec /usr/bin/openresty

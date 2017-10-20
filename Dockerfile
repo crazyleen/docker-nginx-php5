@@ -1,6 +1,6 @@
-FROM combro2k/debian-debootstrap:8
+FROM openresty/openresty:1.11.2.5-jessie
 
-MAINTAINER Martijn van Maurik <docker@vmaurik.nl>
+MAINTAINER heavy ruisheng <ruishenglin@126.com>
 
 # Environment variables
 ENV HOME=/data \
@@ -8,6 +8,8 @@ ENV HOME=/data \
 
 # Add resources
 ADD resources/bin /usr/local/bin/
+RUN mkdir -p /opt/openresty
+ADD resources/openstar /opt/openresty
 
 # Run builder
 RUN chmod +x /usr/local/bin/* && touch ${INSTALL_LOG} && /bin/bash -l -c '/usr/local/bin/setup.sh build'
