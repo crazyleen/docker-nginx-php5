@@ -9,7 +9,7 @@ docker run \
 -p 10000:80 \
 -v /alidata/openstar/conf:/usr/local/openresty/nginx/conf \
 -v /alidata/openstar:/opt/openresty/openstar \
-openresty/openresty:1.11.2.5-xenial
+openresty/openresty:1.11.2.5-jessie
 ```
 
 配置使用介绍：

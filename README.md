@@ -8,7 +8,7 @@ A Dockerfile which produces a docker image that runs [Nginx][nginx] with [PHP5][
 ## Image Creation
 
 ```
-$ sudo docker build -t="combro2k/docker-nginx-php5" .
+$ sudo docker build -t="gzlrs/docker-nginx-php5" .
 ```
 
 ## Container Creation / Running
@@ -19,7 +19,7 @@ This example uses `/tmp/www` to host from, but you can modify this to your needs
 
 ```
 $ mkdir -p /tmp/www
-$ sudo docker run -p 80 -v /tmp/www:/data combro2k/docker-nginx-php5
+$ sudo docker run -p 80 -v /tmp/www:/data gzlrs/docker-nginx-php5
 ```
 
 - /data/web: contains php files etc.
