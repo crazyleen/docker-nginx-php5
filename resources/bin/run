@@ -1,5 +1,4 @@
 #!/bin/bash -e
-
 DATA_DIR="/data"
 
 [[ ! -d "${DATA_DIR}" ]] && mkdir -p "${DATA_DIR}"

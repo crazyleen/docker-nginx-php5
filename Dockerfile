@@ -8,6 +8,8 @@ ENV HOME=/data \
 
 # Add resources
 ADD resources/bin /usr/local/bin/
+# Add remaining resources
+ADD resources/etc/ /etc/
 
 # Run builder
 RUN chmod +x /usr/local/bin/* && touch ${INSTALL_LOG} && /bin/bash -l -c '/usr/local/bin/setup.sh build'
