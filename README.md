@@ -28,4 +28,6 @@ $ sudo docker run -p 80 -v /tmp/www:/data gzlrs/docker-nginx-php5
     - php-*.conf loaded by PHP-fpm daemon
     - emstprc loaded by [esmtp][esmtp] sendmail relay for using sendmail in php mail() command
 
+- /etc/nignx/nginx.conf: nginx config file
+
 [esmtp]: http://esmtp.sourceforge.net/manual.html
