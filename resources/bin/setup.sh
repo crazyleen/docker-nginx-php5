@@ -21,10 +21,10 @@ export PACKAGES=(
 )
 
 pre_install(){
-  echo 'deb http://mirrors.aliyun.com/debian/ jessie main non-free contrib' > /etc/apt/sources.list
-  echo 'deb http://mirrors.aliyun.com/debian/ jessie-proposed-updates main non-free contrib' >> /etc/apt/sources.list
-  echo 'deb-src http://mirrors.aliyun.com/debian/ jessie main non-free contrib' >> /etc/apt/sources.list
-  echo 'deb-src http://mirrors.aliyun.com/debian/ jessie-proposed-updates main non-free contrib' >> /etc/apt/sources.list
+    echo 'deb http://mirrors.aliyun.com/debian/ jessie main non-free contrib' > /etc/apt/sources.list
+    echo 'deb http://mirrors.aliyun.com/debian/ jessie-proposed-updates main non-free contrib' >> /etc/apt/sources.list
+    echo 'deb-src http://mirrors.aliyun.com/debian/ jessie main non-free contrib' >> /etc/apt/sources.list
+    echo 'deb-src http://mirrors.aliyun.com/debian/ jessie-proposed-updates main non-free contrib' >> /etc/apt/sources.list
 
     apt-get update -q 2>&1
     apt-get install -yq ${PACKAGES[@]} 2>&1
@@ -48,8 +48,9 @@ configure_php5_fpm()
 
 configure_nginx_openstar()
 {
-    rm -f /usr/local/openresty/nginx/conf/*
-    cp /opt/openresty/openstar/conf/* /usr/local/openresty/nginx/conf/
+    #cp -rf /usr/local/openresty/nginx/conf/* /data/config
+    rm -f /usr/local/openresty/nginx/conf
+    ln -s /etc/nginx /usr/local/openresty/nginx/conf
 }
 
 post_install() {

@@ -8,8 +8,8 @@ ENV HOME=/data \
 
 # Add resources
 ADD resources/bin /usr/local/bin/
-RUN mkdir -p /opt/openresty
-ADD resources/openstar /opt/openresty
+# Add remaining resources
+ADD resources/etc/ /etc/
 
 # Run builder
 RUN chmod +x /usr/local/bin/* && touch ${INSTALL_LOG} && /bin/bash -l -c '/usr/local/bin/setup.sh build'
@@ -25,4 +25,4 @@ EXPOSE 80
 # Decouple our data from our container.
 VOLUME ["/data"]
 
-CMD ["/usr/local/bin/run"]
+ENTRYPOINT ["/usr/local/bin/run"]
