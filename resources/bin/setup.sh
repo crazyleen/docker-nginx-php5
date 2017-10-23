@@ -46,13 +46,6 @@ configure_php5_fpm()
     echo "include = /data/config/php-*.conf" >> /etc/php5/fpm/pool.d/www.conf
 }
 
-configure_nginx_openstar()
-{
-    #cp -rf /usr/local/openresty/nginx/conf/* /data/config
-    rm -f /usr/local/openresty/nginx/conf
-    ln -s /etc/nginx /usr/local/openresty/nginx/conf
-}
-
 post_install() {
     apt-get autoremove 2>&1
     apt-get autoclean 2>&1
@@ -68,7 +61,6 @@ build() {
 	tasks=(
 		'pre_install'
 		'configure_php5_fpm'
-    'configure_nginx_openstar'
 	)
 
 	for task in ${tasks[@]}

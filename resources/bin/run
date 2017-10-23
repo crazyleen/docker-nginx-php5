@@ -29,4 +29,4 @@ chown www-data:www-data "${DATA_DIR}" -R
 
 service php5-fpm status > /dev/null 2>&1 || service php5-fpm start
 
-/usr/local/openresty/bin/openresty -c /etc/nginx/nginx.conf -g 'daemon off;'
+/usr/local/openresty/bin/openresty -g 'daemon off;'
