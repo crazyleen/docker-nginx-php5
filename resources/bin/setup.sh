@@ -48,11 +48,9 @@ configure_php5_fpm()
 
 configure_nginx_openstar()
 {
-    #rm -f /usr/local/openresty/nginx/conf/*
-    #cp -f /opt/openresty/openstar/conf/* /usr/local/openresty/nginx/conf/
-    cp -rf /usr/local/openresty/nginx/conf /data/config
-    mv -f /usr/local/openresty/nginx/conf /usr/local/openresty/nginx/confback
-    ln -s /data/config /usr/local/openresty/nginx/conf 
+    #cp -rf /usr/local/openresty/nginx/conf/* /data/config
+    rm -f /usr/local/openresty/nginx/conf
+    ln -s /etc/nginx /usr/local/openresty/nginx/conf
 }
 
 post_install() {

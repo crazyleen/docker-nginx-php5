@@ -25,4 +25,4 @@ EXPOSE 80
 # Decouple our data from our container.
 VOLUME ["/data"]
 
-CMD ["/usr/local/bin/run"]
+ENTRYPOINT ["/usr/local/bin/run"]
